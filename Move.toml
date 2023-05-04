@@ -1,0 +1,12 @@
+[package]
+name = "hashkeydid"
+version = "0.0.1"
+
+[dependencies]
+Sui = { local = "../sui/crates/sui-framework/packages/sui-framework"}
+# Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework", rev = "devnet" }
+
+[addresses]
+hashkeydid =  "0x0"
+did = "0x0"
+sui =  "0x2"
