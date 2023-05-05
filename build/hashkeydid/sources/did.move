@@ -12,7 +12,7 @@ module hashkeydid::did {
     use sui::vec_map::{Self, VecMap};
     use sui::ed25519;
     use sui::hash;
-
+    use std::string::{Self, String};
     const ENOT_ADMIN_PRIORITY: u64 = 0;
     const EINVALID_PROOF_OF_KNOWLEDGE: u64 = 1;
     const EDID_CLAIMED: u64 = 2;
@@ -31,7 +31,7 @@ module hashkeydid::did {
 
     struct KYCInfo has key, store {
         id: UID,
-        did: vector<u8>,
+        did: String,
         status: bool,
         updateTime: u64,
         expireTime: u64,
@@ -40,26 +40,26 @@ module hashkeydid::did {
     struct Did has key, store {
         id: UID,
         url: url::Url,
-        did: vector<u8>
+        did: String
     }
 
     struct DeedGrant has key, store {
         id: UID,
-        name: vector<u8>,
-        description: vector<u8>,
+        name: String,
+        description: String,
         url: url::Url
     }
 
     struct DeedGrantEvent has copy, drop {
         object_id: ID,
         creator: address,
-        name: vector<u8>,
+        name: String,
     }
 
     struct MintDidEvent has copy, drop {
         object_id: ID,
         creator: address,
-        name: vector<u8>,
+        name: String,
     }
 
     fun init(ctx: &mut TxContext) {
@@ -91,8 +91,8 @@ module hashkeydid::did {
         ed25519::ed25519_verify(&evidence, &public_key, &message);
         let dg = DeedGrant {
             id: object::new(ctx),
-            name: name,
-            description: symbol,
+            name: string::utf8(name),
+            description: string::utf8(symbol),
             url: url::new_unsafe_from_bytes(url)
         };
         event::emit(DeedGrantEvent {
@@ -118,7 +118,7 @@ module hashkeydid::did {
 
         let did = Did {
             id: object::new(ctx),
-            did: _did,
+            did: string::utf8(_did),
             url: url::new_unsafe_from_bytes(_url)
         };
         let sender = tx_context::sender(ctx);
@@ -126,7 +126,7 @@ module hashkeydid::did {
         event::emit(MintDidEvent {
             object_id: object::uid_to_inner(&did.id),
             creator: sender,
-            name: _did,
+            name: string::utf8(_did),
         });
         transfer::transfer(did, sender);
     }
@@ -153,7 +153,7 @@ module hashkeydid::did {
         assert!(ed25519::ed25519_verify(&signature, &public_key, &message), INVALID_SIGNATURE);
         let kyc = KYCInfo {
             id: object::new(ctx),
-            did: did,
+            did: string::utf8(did),
             status: status,
             updateTime: _updateTime,
             expireTime: _expireTime,
@@ -184,7 +184,7 @@ module hashkeydid::did {
         return true
     }
 
-    public fun name(did: &Did): vector<u8> {
+    public fun name(did: &Did): String {
         return did.did
     }
 
