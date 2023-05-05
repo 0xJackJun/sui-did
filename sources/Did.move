@@ -88,7 +88,7 @@ module hashkeydid::did {
             vector::push_back(&mut message, *vector::borrow(&symbol, i));
             i = i + 1;
         };
-        ed25519::ed25519_verify(&evidence, &public_key, &message);
+        assert!(ed25519::ed25519_verify(&evidence, &public_key, &message), INVALID_SIGNATURE);
         let dg = DeedGrant {
             id: object::new(ctx),
             name: string::utf8(name),
@@ -209,18 +209,18 @@ module hashkeydid::did {
       result
    }
 
-    public  fun pubkey_to_address(pk_bytes: vector<u8>): vector<u8> {
-        let data = hash::keccak256(&pk_bytes);
-        let result = vector::empty<u8>();
+    // public  fun pubkey_to_address(pk_bytes: vector<u8>): vector<u8> {
+    //     let data = hash::keccak256(&pk_bytes);
+    //     let result = vector::empty<u8>();
 
-        let i = 12;
-        while (i < 32) {
-            let v = vector::borrow(&data, i);
-            vector::push_back(&mut result, *v);
-            i = i + 1
-        };
-        result
-    }
+    //     let i = 12;
+    //     while (i < 32) {
+    //         let v = vector::borrow(&data, i);
+    //         vector::push_back(&mut result, *v);
+    //         i = i + 1
+    //     };
+    //     result
+    // }
 }
 
 #[test_only]

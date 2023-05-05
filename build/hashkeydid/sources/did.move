@@ -88,7 +88,7 @@ module hashkeydid::did {
             vector::push_back(&mut message, *vector::borrow(&symbol, i));
             i = i + 1;
         };
-        ed25519::ed25519_verify(&evidence, &public_key, &message);
+        assert!(ed25519::ed25519_verify(&evidence, &public_key, &message), INVALID_SIGNATURE);
         let dg = DeedGrant {
             id: object::new(ctx),
             name: string::utf8(name),
