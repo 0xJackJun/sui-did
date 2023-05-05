@@ -17,6 +17,7 @@ module hashkeydid::did {
     const EINVALID_PROOF_OF_KNOWLEDGE: u64 = 1;
     const EDID_CLAIMED: u64 = 2;
     const INVALID_DIDFORMAT: u64 = 3;
+    const INVALID_SIGNATURE: u64 = 4;
 
     struct AdminCap has key { id: UID }
 
@@ -149,7 +150,7 @@ module hashkeydid::did {
             vector::push_back(&mut message, *vector::borrow(&did, i));
             i = i + 1;
         };
-        ed25519::ed25519_verify(&signature, &public_key, &message);
+        assert!(ed25519::ed25519_verify(&signature, &public_key, &message), INVALID_SIGNATURE);
         let kyc = KYCInfo {
             id: object::new(ctx),
             did: did,
@@ -222,37 +223,56 @@ module hashkeydid::did {
     }
 }
 
-// #[test_only]
-// module sui::devnet_didTests {
-//     use sui::did::{Self, Auth, Did, GlobleStorage,KYCInfo};
-//     use sui::test_scenario as ts;
-//     use sui::transfer;
-//     use std::string;
+#[test_only]
+module sui::devnet_didTests {
+    use hashkeydid::did;
+    use sui::test_scenario;
+    use sui::transfer;
+    use std::debug;
+    #[test]
+    fun test_claim() {
+        let owner = @0xC0FFEE;
+        let user1 = @0xA1;
 
-//     #[test]
-//     fun test_claim() {
-//         let owner = @0xC0FFEE;
-//         let user1 = @0xA1;
+        let scenario_val = test_scenario::begin(user1);
+        let scenario = &mut scenario_val;
 
-//         let scenario_val = test_scenario::begin(user1);
-//         let scenario = &mut scenario_val;
+        test_scenario::next_tx(scenario, owner);
+        {
+            //claimDid(storage: &mut GlobleStorage, _did: vector<u8>, _url: vector<u8>, ctx: &mut TxContext)
+            let storage = test_scenario::take_from_sender<did::GlobleStorage>(scenario);
+            did::claimDid(&mut storage, b"abc.key", b"https://www.coffee.com", test_scenario::ctx(scenario));
+            let did = test_scenario::take_from_sender<did::Did>(scenario);
+            debug::print(&did);
+            test_scenario::return_to_sender(scenario, storage);
+            test_scenario::return_to_sender(scenario, did);
+        };
+        test_scenario::end(scenario_val);
+    }
 
-//         test_scenario::next_tx(scenario, owner);
-//         {
-//             counter::init(test_scenario::ctx(scenario));
-//         };
+    #[test]
+    fun test_addKYC() {
+        //public entry fun addKYC(to: address, did: vector<u8>, status: bool, _updateTime: u64, _expireTime: u64, signature: vector<u8>, public_key: vector<u8>, ctx: &mut TxContext)
+        let owner = @0xC0FFEE;
+        let user1 = @0xA1;
 
-//         test_scenario::next_tx(scenario, user1);
-//         {
-//             let counter_val = test_scenario::take_shared<counter::Counter>(scenario);
-//             let did = &mut GlobleStorage;
+        let scenario_val = test_scenario::begin(user1);
+        let scenario = &mut scenario_val;
 
-//             counter::increment(counter);
-//             counter::increment(counter);
-//             counter::increment(counter);
-//             test_scenario::return_shared(counter_val);
-//         };
+        test_scenario::next_tx(scenario, owner);
+        {
+            did::addKYC(user1, b"did",true,1630565678,1730565678,b"5cac8c4c9c8b047b4cea34036fe0ad7243cb5400e873719a5463e8be3b04256087c5a4c372eb38ec80572303acc0d326443f8fd43cd5e89a1e248778cf64050b", b"8b416c28de5302621f432a13091d5ef6677c35808c7908a326189b1ed79b99cc", test_scenario::ctx(scenario));
+        };
+        test_scenario::end(scenario_val);
+    }
 
-//         test_scenario::end(scenario_val);
-//     }
-// }
+    #[test]
+    fun test_issueDG() {
+        //issueDG(to: address, name: vector<u8>, symbol: vector<u8>, url: vector<u8>, evidence: vector<u8>, public_key: vector<u8>, ctx: &mut TxContext)
+    }
+
+    #[test]
+    fun test_verifyDIDFormat() {
+        //public fun verifyDIDFormat(_did: vector<u8>): bool
+    }
+}
