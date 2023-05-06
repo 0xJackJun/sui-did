@@ -6,15 +6,15 @@ compiled_package_info:
     hashkeydid: "0000000000000000000000000000000000000000000000000000000000000000"
     std: "0000000000000000000000000000000000000000000000000000000000000001"
     sui: "0000000000000000000000000000000000000000000000000000000000000002"
-  source_digest: BCFDD6B7D0820DBBEBF80F55065FAC4764B1499EDA0C427942BCB639FF44E655
+  source_digest: E19C4B5531C6626C3B25438EFC42462AA78F309F318F94827353072B6A231200
   build_flags:
-    dev_mode: false
-    test_mode: false
+    dev_mode: true
+    test_mode: true
     generate_docs: false
     generate_abis: false
     install_dir: ~
     force_recompilation: false
-    lock_file: "./Move.lock"
+    lock_file: ~
     additional_named_addresses: {}
     architecture: ~
     fetch_deps_only: false
