@@ -8,5 +8,4 @@ Sui = { local = "../sui/crates/sui-framework/packages/sui-framework"}
 
 [addresses]
 hashkeydid =  "0x0"
-did = "0x0"
 sui =  "0x2"
