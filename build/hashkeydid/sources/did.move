@@ -87,11 +87,11 @@ module hashkeydid::did {
             vector::push_back(&mut message, *vector::borrow(&name, i));
             i = i + 1;
         };
-        let i = 0;
-        while(i < vector::length(&symbol)){
-            vector::push_back(&mut message, *vector::borrow(&symbol, i));
-            i = i + 1;
-        };
+        // let i = 0;
+        // while(i < vector::length(&symbol)){
+        //     vector::push_back(&mut message, *vector::borrow(&symbol, i));
+        //     i = i + 1;
+        // };
         assert!(ed25519::ed25519_verify(&evidence, &public_key, &message), INVALID_SIGNATURE);
         let dg = DeedGrant {
             id: object::new(ctx),
@@ -137,18 +137,6 @@ module hashkeydid::did {
 
     public entry fun addKYC(to: address, did: vector<u8>, status: bool, _updateTime: u64, _expireTime: u64, signature: vector<u8>, public_key: vector<u8>, ctx: &mut TxContext) {
         let message = vector::empty<u8>();
-        // let updateTime: vector<u8> = u64_to_vec_u8_string(_updateTime);
-        // let expireTime: vector<u8> = u64_to_vec_u8_string(_expireTime);
-        // let i = 0;
-        // while(i < vector::length(&updateTime)){
-        //     vector::push_back(&mut message, *vector::borrow(&updateTime, i));
-        //     i = i + 1;
-        // };
-        // let i = 0;
-        // while(i < vector::length(&expireTime)){
-        //     vector::push_back(&mut message, *vector::borrow(&expireTime, i));
-        //     i = i + 1;
-        // };
         let i = 0;
         while(i < vector::length(&did)){
             vector::push_back(&mut message, *vector::borrow(&did, i));
@@ -195,21 +183,4 @@ module hashkeydid::did {
     public fun url(did: &Did): Url {
         return did.url
     }
-
-    public fun u64_to_vec_u8_string(val : u64) : vector<u8> {
-      let result = vector::empty<u8>();
-
-      if (val == 0) {
-         return b"0"
-      };
-     
-      while (val != 0) {
-         vector::push_back(&mut result, ((48 + val % 10) as u8));
-         val = val / 10;
-      };
-
-      vector::reverse(&mut result);
-      
-      result
-   }
 }
