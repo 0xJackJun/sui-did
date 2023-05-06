@@ -79,7 +79,7 @@ module hashkeydid::did {
 
         transfer::share_object(storage);
     }
-    
+
     public entry fun issueDG(to: address, name: vector<u8>, symbol: vector<u8>, url: vector<u8>, evidence: vector<u8>, public_key: vector<u8>, ctx: &mut TxContext) {
         let message = vector::empty<u8>();
         let i = 0;
@@ -137,20 +137,20 @@ module hashkeydid::did {
 
     public entry fun addKYC(to: address, did: vector<u8>, status: bool, _updateTime: u64, _expireTime: u64, signature: vector<u8>, public_key: vector<u8>, ctx: &mut TxContext) {
         let message = vector::empty<u8>();
-        let updateTime: vector<u8> = u64_to_vec_u8_string(_updateTime);
-        let expireTime: vector<u8> = u64_to_vec_u8_string(_expireTime);
+        // let updateTime: vector<u8> = u64_to_vec_u8_string(_updateTime);
+        // let expireTime: vector<u8> = u64_to_vec_u8_string(_expireTime);
+        // let i = 0;
+        // while(i < vector::length(&updateTime)){
+        //     vector::push_back(&mut message, *vector::borrow(&updateTime, i));
+        //     i = i + 1;
+        // };
+        // let i = 0;
+        // while(i < vector::length(&expireTime)){
+        //     vector::push_back(&mut message, *vector::borrow(&expireTime, i));
+        //     i = i + 1;
+        // };
         let i = 0;
-        while(i < vector::length(&updateTime)){
-            vector::push_back(&mut message, *vector::borrow(&updateTime, i));
-            i = i + 1;
-        };
-        let i = 0;
-        while(i < vector::length(&expireTime)){
-            vector::push_back(&mut message, *vector::borrow(&expireTime, i));
-            i = i + 1;
-        };
-        let i = 0;
-        while(i < vector::length(&signature)){
+        while(i < vector::length(&did)){
             vector::push_back(&mut message, *vector::borrow(&did, i));
             i = i + 1;
         };

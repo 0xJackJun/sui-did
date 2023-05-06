@@ -43,7 +43,7 @@ module sui::devnet_didTests {
 
         test_scenario::next_tx(scenario, owner);
         {
-            did::addKYC(user1, b"did",true,1630565678,1730565678,b"5cac8c4c9c8b047b4cea34036fe0ad7243cb5400e873719a5463e8be3b04256087c5a4c372eb38ec80572303acc0d326443f8fd43cd5e89a1e248778cf64050b", b"8b416c28de5302621f432a13091d5ef6677c35808c7908a326189b1ed79b99cc", test_scenario::ctx(scenario));
+            did::addKYC(user1, b"did.key",true,1630565678,1730565678,x"7cd7e8e9edbf2e32386e1ad622e17851f739a1bb26b0a9ede554ff97b436f17461cedf16bac0ed0bd9699c90fd563508a91535dcddba2965df09cc2bb1cde001", x"cc62332e34bb2d5cd69f60efbb2a36cb916c7eb458301ea36636c4dbb012bd88", test_scenario::ctx(scenario));
         };
         test_scenario::end(scenario_val);
     }
